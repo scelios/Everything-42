@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 09:19:20 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/01/23 18:23:38 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/01/31 11:13:34 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	ft_sort_tab(t_dlist *dlist);
 
 double	ft_median(t_list *list, int size);
 
-int	ft_is_sort(t_list *list, int len);
+int	ft_is_sort(t_list *list);
 
-
+int	ft_cut_by_2_b(t_dlist *dlist, int len, int test);
 #endif
 
 /*

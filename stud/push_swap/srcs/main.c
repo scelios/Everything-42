@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 10:35:15 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/01/25 22:16:46 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/01/31 13:14:53 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,7 +333,7 @@ int	*ft_first_big_sort(t_dlist *dlist)
 	int		i;
 
 	dlist->size = 0;
-	nbr_of_group = malloc(sizeof(int) * 100);
+	nbr_of_group = malloc(sizeof(int) * 10000);
 	while(ft_lstsize(dlist->a) > 2)
 	{
 		size = ft_lstsize(dlist->a);
@@ -352,7 +352,6 @@ int	*ft_first_big_sort(t_dlist *dlist)
 		//printf("%f\n",median);
 		//ft_print_dlist(dlist);
 		nbr_of_group[dlist->size++] = i;
-		printf("i = %d %d\n", dlist->size - 1, i);
 	}
 	ft_resolve_little(dlist);
 	return (nbr_of_group);
@@ -364,70 +363,19 @@ void	ft_push_while(t_dlist *dlist, int len, void (*f)(t_dlist *dlist))
 		f(dlist);
 }
 
-/*int	ft_cut_by_2_b(t_dlist *dlist, int len)
+
+void	ft_cut_by_2_a(t_dlist *dlist, int len)
 {
 	double	median;
-	int		i;
-	int		rotate_b;
-
-	i = 0;
-	rotate_b = 0;
-	median = ft_median(dlist->b, len);
-	while (len-- > 0)
-	{
-		if (*(int *)dlist->b->content > median)
-		{
-			ft_pa(dlist);
-			i++;
-		}
-		else
-		{
-			ft_rb(dlist);
-			rotate_b++;
-		}
-	}
-	while (rotate_b--)
-		ft_rrb(dlist);
-	return (i);
-}*/
-
-int	ft_cut_by_2_b(t_dlist *dlist, int len)
-{
-	double	median;
-	int		i;
-	int		rotate_b;
-
-	i = 0;
-	rotate_b = 0;
-	median = ft_median(dlist->b, len);
-	while (len--)
-	{
-		if (*(int *)dlist->b->content > median)
-		{
-			ft_pa(dlist);
-			i++;
-		}
-		else
-		{
-			ft_rb(dlist);
-			rotate_b++;
-		}
-	}
-	while (rotate_b--)
-		ft_rrb(dlist);
-	return (i);
-}
-
-/*int	*ft_cut_by_2_a(t_dlist *dlist, int len, int *nbr)
-{
-	double	median;
+	int		nbr[10000];
 	int		i;
 	int		j;
 	int		rotate_a;
 
 
 	j = 1;
-	while (len > 2)
+	//nbr = malloc(sizeof(int) * (ft_lstsize(dlist->b) * ft_lstsize(dlist->a)));
+	while (ft_lstsize(dlist->a) > 2 + ft_len_is_sort(dlist->a, 1))
 	{
 		median = ft_median(dlist->a, len);
 		i = 0;
@@ -448,13 +396,96 @@ int	ft_cut_by_2_b(t_dlist *dlist, int len)
 		nbr[j++] = i;
 		while (rotate_a-- > 0)
 			ft_rra(dlist);
-		len /= 2;
+		//len -= i;
 	}
 	nbr[0] = j;
 	ft_resolve_little(dlist);
-	return (nbr);
-}*/
+	free(nbr);
+	// while (j)
+		// ft_cut_by_2_b(dlist, nbr[--j], 1);
+}
 
+int	ft_cut_by_2_b(t_dlist *dlist, int len, int test)
+{
+	double	median;
+	int		i;
+	int		rotate_b;
+	int		rotate_a = 0;
+	int		j = 0;
+	int temp;
+	int	temp2;
+
+	if (len == 0)
+		return (0);
+	i = 0;
+	rotate_b = 0;
+	median = ft_median(dlist->b, len);
+	while (len--)
+	{
+		if (*(int *)dlist->b->content > median)
+		{
+			ft_pa(dlist);
+			i++;
+		}
+		else
+		{
+			ft_rb(dlist);
+			rotate_b++;
+		}
+	}
+	temp= rotate_b;
+	while (rotate_b-- && test)
+		ft_rrb(dlist);
+	// median = ft_median(dlist->a, i);
+	// while (i--)
+	// {
+		// if (*(int *)dlist->a->content < median)
+		// {
+			// ft_pb(dlist);
+			// j++;
+		// }
+		// else
+		// {
+			// ft_ra(dlist);
+			// rotate_a++;
+		// }
+	// }
+	// temp2 = rotate_a;
+	// while (rotate_a--)
+		// ft_rra(dlist);
+	while (ft_lstsize(dlist->a) > 2 + ft_len_is_sort(dlist->a, 1))
+	{
+		median = ft_median(dlist->a, len);
+		j = 0;
+		rotate_a = 0;
+		while (!ft_all_above_median(dlist->a, median, len))
+		{
+			if (*(int *)dlist->a->content < median)
+			{
+				ft_pb(dlist);
+				j++;
+			}
+			else
+			{
+				ft_ra(dlist);
+				rotate_a++;
+			}
+		}
+		//nbr[j++] = i;
+		while (rotate_a-- > 0)
+			ft_rra(dlist);
+		//len -= i;
+	}
+	// ft_cut_by_2_b(dlist, temp2, 0);
+	// ft_cut_by_2_b(dlist, temp, 0);
+	// while (temp2--)
+		// ft_pa(dlist);
+	// while (temp--)
+		// ft_pa(dlist);
+	return (i);
+}
+
+/*
 int	*ft_cut_by_2_a(t_dlist *dlist, int len, int *nbr)
 {
 	double	median;
@@ -498,7 +529,7 @@ void	ft_solve(t_dlist *dlist, int len)
 	int	len_group;
 	int	i;
 
-	nbr_of_group = malloc(sizeof(int) * 100);
+	nbr_of_group = malloc(sizeof(int) * 10000);
 	if (!nbr_of_group)
 		return ;
 	while (len > 1)
@@ -510,25 +541,53 @@ void	ft_solve(t_dlist *dlist, int len)
 		i = -1;
 		while (++i > nbr_of_group[0])
 			ft_solve(dlist, ++nbr_of_group[nbr_of_group[0] - i]);
-		len -= len_group;
+		//len -= len_group;
+		len--;
 	}
 	ft_push_while(dlist, len, &ft_pa);
 	free(nbr_of_group);
 }
+*/
+
+
+
+void	ft_solve(t_dlist *dlist, int len, int test)
+{
+	int	*nbr_of_group;
+	int	nbr_rotate = 0;
+	int	len_group;
+	int	i;
+
+	ft_cut_by_2_b(dlist, len, test);
+	// nbr_of_group = malloc(sizeof(int) * 10000);
+	// if (!nbr_of_group)
+		// return ;
+	// while (len > 0)
+	// {
+		// len_group = ft_cut_by_2_b(dlist, len);
+		// nbr_of_group = ft_cut_by_2_a(dlist, len_group, nbr_of_group);
+		// len = len / 2;
+		// i = -1;
+		// while (++i > nbr_of_group[0])
+			// ft_solve(dlist, ++nbr_of_group[nbr_of_group[0] - i]);
+	// }
+	//free(nbr_of_group);
+
+}
+
 
 void	ft_sort_list(t_dlist *dlist)
 {
 	int	*nbr_of_group;
 
+
 	nbr_of_group = ft_first_big_sort(dlist);
-	//dlist->size++;
+	//int i = ft_lstsize(dlist->b);
+	// while (i--)
+		// ft_pa(dlist);
+	//ft_cut_by_2_a(dlist, ft_lstsize(dlist->a) - 2);
 	while (--dlist->size >= 0)
-		ft_solve(dlist, nbr_of_group[dlist->size]);
-	// while (dlist->b)
-		// ft_solve(dlist, ft_lstsize(dlist->b));
-	//printf("group = %d %d\n", nbr_of_group[dlist->size] ,dlist->size);
-	//ft_solve(dlist, nbr_of_group[--dlist->size]);
-	//}
+		ft_solve(dlist, nbr_of_group[dlist->size], dlist->size > 0);
 	free(nbr_of_group);
 
 }
@@ -552,7 +611,6 @@ int	main(int a, char **b)
 	}
 	dlist.a = ft_create_list(a, tab);
 	dlist.b = NULL;
-	ft_print_dlist(&dlist);
 	ft_sort_list(&dlist);
 	ft_print_dlist(&dlist);
 	ft_free_list(dlist.a);
