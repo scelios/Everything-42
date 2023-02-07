@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 09:31:50 by beaudibe          #+#    #+#             */
-/*   Updated: 2022/12/08 21:38:59 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/02/01 16:24:03 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "stdio.h"
+# include "stdint.h"
 # include <limits.h>
 # include <stdarg.h>
 

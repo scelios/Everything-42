@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 10:35:15 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/01/31 13:14:53 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/02/02 15:45:54 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,7 +400,7 @@ void	ft_cut_by_2_a(t_dlist *dlist, int len)
 	}
 	nbr[0] = j;
 	ft_resolve_little(dlist);
-	free(nbr);
+	//free(nbr);
 	// while (j)
 		// ft_cut_by_2_b(dlist, nbr[--j], 1);
 }

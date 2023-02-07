@@ -1,51 +1,22 @@
-NAME = push_swap
 
-# directories
-OBJ_DIR = obj/
-SRC_DIR = srcs/
-INC_DIR = includes/
-LIBFT_DIR = libft/
-TEST_DIR = test/
+NAME	=	push_swap
+SRCS	=	${shell find ./srcs -iname "*.c"}
+OBJS	=	${SRCS:.c=.o}
 
-# complier
-CFLAGS =
-DEBUG = -Wall -Werror -Wextra -g
+ifeq ($(shell uname), Darwin)
+	CC=clang
+else
+	CC=gcc
+endif
 
-# src & obj files
-SRC_FILES = ft_little_sort.c main.c lst_utils.c utils.c ft_sort.c
-OBJ_FILES = $(SRC_FILES:.c=.o)
-SRC = $(addprefix $(SRC_DIR), $(SRC_FILES))
-OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
+all: $(OBJS) libft.o
+	$(CC) $(OBJS) ./libft/libft.a -o $(NAME)
 
-# libraries
-LIBFT = ft
+%.o: %.c
+	$(CC) -c $< -o $@
 
-INCLUDES = -I $(LIBFT_DIR)includes/ -I includes/
-
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	@$(MAKE) -C $(LIBFT_DIR)
-	@cp $(LIBFT_DIR)/libft.a ./$(NAME)
-	@gcc $(NAME) $(OBJ) -o push_swap && ./push_swap `ruby -e "puts (-10..10).to_a.shuffle.join(' ')"`
-
-$(OBJ): $(SRC)
-	@mkdir -p $(OBJ_DIR)
-	@gcc $(CFLAGS) $(INCLUDES) -c $^
-	@mv -f *.o $(OBJ_DIR)
+libft.o: ./libft/libft.a
+	$(CC) -c ./libft/libft.a -o libft.o
 
 clean:
-	@make -C $(LIBFT_DIR) clean
-	@/bin/rm -rf $(OBJ_DIR)
-
-fclean: clean
-	@make -C $(LIBFT_DIR) fclean
-	@/bin/rm -f $(NAME)
-	@/bin/rm -f $(TEST)
-
-re: fclean all
-
-norm:
-	@norminette | grep Error
-
-.PHONY: all clean fclean re $(NAME) norm
+	rm -f $(OBJS) libft.o $(NAME)

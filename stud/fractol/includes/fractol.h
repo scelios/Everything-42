@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 14:53:54 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/01/18 12:35:57 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/02/01 16:31:00 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_draw_rectangle(t_fractol *fractol, double x[2], \
 void	ft_mandelbrot_julia(t_fractol *fractol, int x, int y, double zx);
 void	ft_cube(t_fractol *fractol, double x[2], double y[2], int depth);
 void	ft_calcul_cube_rectangle(t_fractol *fractol, double x[2], \
-		double y[2], double new_size[3]);
+		double y[2], double new_size[5]);
 void	ft_calcul_cube(t_fractol *fractol, double x[2], \
 		double y[2], double new_size[5]);
 void	ft_mouse_hook(mouse_key_t button, action_t action, \

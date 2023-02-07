@@ -1,37 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_little_sort.c                                   :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beaudibe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/03 17:51:10 by beaudibe          #+#    #+#             */
-/*   Updated: 2022/12/05 12:01:17 by beaudibe         ###   ########.fr       */
+/*   Created: 2022/09/26 11:40:24 by beaudibe          #+#    #+#             */
+/*   Updated: 2022/09/28 15:26:29 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/push_swap.h"
+#include "libft.h"
 
-void ft_three_number()
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	ft_putstr_fd("Bonjour\n",1);
-	/*
-	if (est_trier)
-		return;
-	if (1_2 && 2_1)
-		inverse;//sa
-	else if (1_3 && 2_2)
+	size_t	i;
+
+	i = -1;
+	while (++i < n)
 	{
-		inverse;//sa
-		descend;//rra
+		if (((unsigned char *)s1)[i] != ((unsigned char *)s2)[i])
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
 	}
-	else if (1_3 && 2_1)
-		monte;//ra
-	else if (1_1 && 2_3)
-	{
-		inverse;//sa
-		monte;//ra;
-	}
-	else if (1_2 && 2_3)
-		descend;//rra*/
+	return (0);
 }
