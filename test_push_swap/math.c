@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/05 17:55:13 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/02/03 16:22:26 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/09 16:44:11 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@ float	ft_how_much_sort(t_list *list)
 
 	in_order = 0;
 	current = list;
+	size = 0;
 	while (current->next)
 	{
-		if (*(int *)current->content > *(int *) (current->next)->content)
+		if (*(int *)current->content > *(int *)(current->next)->content)
 			in_order++;
 		current = current->next;
 		size++;
@@ -32,75 +33,66 @@ float	ft_how_much_sort(t_list *list)
 
 int	ft_is_sort(t_list *list)
 {
-	t_list *temp;
-	int	i;
-	int	size;
+	t_list	*temp;
+	int		i;
+	int		size;
 
 	i = -1;
 	size = ft_lstsize(list);
 	temp = list;
-	while(++i < size - 1)
+	while (++i < size - 1)
 	{
-		if (*(int *)temp->content > *(int *) (temp->next)->content)
+		if (*(int *)temp->content > *(int *)(temp->next)->content)
 			return (1);
 		temp = temp->next;
 	}
 	return (0);
 }
 
-/*
+int	ft_median(t_list *list, int size)
 {
-	int	i;
-	int	start_i;
-	int	end_i;
-	int min;
-	int j;
+	t_list	*current;
+	int		total;
+	int		i;
 
-	i = -1;
-	while (++i < size)
+	i = 0;
+	total = 0;
+	current = list;
+	while (current != NULL && i++ < size)
 	{
-		if (list[i] == 5)
-		{
-			start_i = i;
-			while (list[start_i] == 5)
-				start_i++;
-			end_i = start_i;
-			j = start_i;
-			while (list[end_i++] == 7)
-				end_i++;
-			i = end_i;
-			min = ft_min(start_i - i, end_i - start_i);
-			while (min-- > 0)
-			{
-				list[start_i++] = 0;
-				list[j++] = 0;
-			}
-		}
+		total += *(int *) current->content;
+		current = current->next;
 	}
+	return ((int)((float) total / (float) size));
 }
 
-
-
-
+int	ft_len_is_sort(t_list *list, int start_sort)
 {
-	int	i;
-	int	j;
+	t_list	*temp;
+	int		i;
 
-
-	j = 1;
-	while (j != 0)
+	temp = list;
+	i = 0;
+	while (temp->next && start_sort--)
 	{
-		j = 0;
-		i = -1;
-		while (++i < size)
-		{
-			if (list[i] == a && list[i + 1] == b)
-			{
-				list[i] = 0;
-				list[i + 1] = 0;
-				i += 2;
-				j++;
-			}
-		}
+		i++;
+		if (*(int *)temp->content > *(int *) temp->next->content)
+			i = 0;
+		temp = temp->next;
 	}
-}*/
+	return (i);
+}
+
+int	ft_all_above_median(t_list *list, int median, int len)
+{
+	t_list	*temp;
+
+	temp = list;
+	while (temp && len--)
+	{
+		if (*(int *)temp->content < median)
+			return (0);
+		temp = temp->next;
+	}
+	return (1);
+}

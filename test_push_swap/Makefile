@@ -1,36 +1,27 @@
-NAME	=	push_swap
-SRCS	=	${shell find ./srcs -iname "*.c"}
-LIBFT	=	./libft/
-OBJS	=	${SRCS:.c=.o}
+NAME = push_swap
 
-ifeq ($(shell uname), Darwin)
-	CC=clang
-else
-	CC=gcc
-endif
+SRCS = command.c create_free_list.c lst.c math.c print_command.c sort.c util.c check.c command2.c main.c solve_little.c
+
+OBJS = ${SRCS:.c=.o}
+
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -Iincludes
+
+RM = rm -rf
 
 all: ${NAME}
+${NAME}: ${OBJS}
+	@${MAKE} -C ./libft
+	@${CC} ${CFLAGS} ${OBJS} ./libft/libft.a -o ${NAME}
 
-${NAME}: $(OBJS) libft libft.o
-	$(CC) $(OBJS) ./libft/libft.a -o $(NAME)
-%.o: %.c
-	$(CC) -c $< -o $@
-
-libft.o:
-	$(CC) -c ./libft/libft.a -o libft.o
-
-libft:
-	make -C $(LIBFT)
 
 clean:
-	rm -f $(OBJS) libft.o $(NAME)
-	make -C $(LIBFT) clean
+	@${MAKE} -C ./libft fclean
+	@${RM} ${OBJS}
 
 fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT) fclean
+	@${RM} ${NAME}
 
 re: fclean all
-	make -C $(LIBFT) re
 
 .PHONY: all clean fclean re

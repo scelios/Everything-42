@@ -1,0 +1,36 @@
+NAME	=	philo
+SRCS	=	${shell find ./srcs -iname "*.c"}
+LIBFT	=	./libft/
+OBJS	=	${SRCS:.c=.o}
+
+ifeq ($(shell uname), Darwin)
+	CC=clang
+else
+	CC=gcc
+endif
+
+all: ${NAME}
+
+${NAME}: $(OBJS) libft libft.o
+	$(CC) $(OBJS) ./libft/libft.a -o $(NAME)
+%.o: %.c
+	$(CC) -c $< -o $@
+
+libft.o:
+	$(CC) -c ./libft/libft.a -o libft.o
+
+libft:
+	make -C $(LIBFT)
+
+clean:
+	rm -f $(OBJS) libft.o $(NAME)
+	make -C $(LIBFT) clean
+
+fclean: clean
+	rm -f $(NAME)
+	make -C $(LIBFT) fclean
+
+re: fclean all
+	make -C $(LIBFT) re
+
+.PHONY: all clean fclean re

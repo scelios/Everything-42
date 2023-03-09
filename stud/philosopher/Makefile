@@ -1,36 +1,37 @@
 NAME	=	philo
-SRCS	=	${shell find ./srcs -iname "*.c"}
 LIBFT	=	./libft/
+HEADERS	=	-I./includes/  -I${LIBFT}/includes
+SRCS	=	${shell find ./srcs -iname "*.c"}
 OBJS	=	${SRCS:.c=.o}
 
-ifeq ($(shell uname), Darwin)
-	CC=clang
-else
-	CC=gcc
-endif
+CC		=	gcc
+CFLAGS	=
+RM		=	rm -f
 
-all: ${NAME}
-
-${NAME}: $(OBJS) libft libft.o
-	$(CC) $(OBJS) ./libft/libft.a -o $(NAME)
-%.o: %.c
-	$(CC) -c $< -o $@
-
-libft.o:
-	$(CC) -c ./libft/libft.a -o libft.o
+all: libft ${NAME}
 
 libft:
-	make -C $(LIBFT)
+		make -C ${LIBFT}
+
+
+%.o: %.c
+		${CC} ${CFLAGS} -c ${HEADERS} $< -o ${<:.c=.o}
+
+${NAME}: ${OBJS}
+		${CC} ${OBJS} ${LIBS} ${HEADERS} -o ${NAME}
 
 clean:
-	rm -f $(OBJS) libft.o $(NAME)
-	make -C $(LIBFT) clean
+		${RM} ${OBJS}
+		make -C ${LIBFT} clean
 
 fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT) fclean
+		${RM} ${NAME}
+		make -C ${LIBFT} fclean
 
-re: fclean all
-	make -C $(LIBFT) re
+pop:
+		${RM} ${OBJS}
+		${RM} ${NAME}
 
-.PHONY: all clean fclean re
+re: clean all
+
+.PHONY: all, clean, fclean, re, libft

@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/08 18:38:39 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/09 17:20:05 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,8 +175,8 @@ void	ft_eat(t_philo	*philo)
 		usleep(ft_return_timer(philo, philo->time_to_die) * 1000);
 		return ;
 	}
-	//if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die \
-	|| philo->chrono > philo->time_to_die)
+	//if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die
+	//|| philo->chrono > philo->time_to_die)
 	philo->chrono = ft_chrono(philo->chrono_time);
 	if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die)
 	{
@@ -231,7 +231,7 @@ void	ft_sleep(t_philo *philo)
 	philo->chrono = ft_chrono(philo->chrono_time);
 }
 
-void *ft_philo_odd(t_philo *philo)
+void ft_philo_odd(t_philo *philo)
 {
 	int		first;
 
@@ -248,48 +248,48 @@ void *ft_philo_odd(t_philo *philo)
 		if (philo->philo % 3 == 0)
 		{
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_sleep(philo);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_think(philo);
 		}
 		else if (philo->philo % 3 == 1)
 		{
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_think(philo);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_eat(philo);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_sleep(philo);
 		}
 		else if (philo->philo % 3 == 2)
 		{
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_think(philo);
 			if (first++ == 0 && !ft_check_die(philo))
 				usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_eat(philo);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			ft_sleep(philo);
 		}
 	}
 }
 
-void *ft_philo_peer(t_philo *philo)
+void ft_philo_peer(t_philo *philo)
 {
 	philo->status = -1;
 	gettimeofday(&philo->current_time, NULL);
@@ -303,20 +303,20 @@ void *ft_philo_peer(t_philo *philo)
 		if (philo->philo % 2 == 0)
 		{
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			// philo->chrono = ft_chrono(philo->chrono_time);
 			// philo->current_timer = ft_chrono(philo->current_time);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_sleep(philo);
 		}
 		else
 		{
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			if (philo->status == -1)
 			{
 				ft_think(philo);
@@ -325,13 +325,13 @@ void *ft_philo_peer(t_philo *philo)
 				philo->status = 2;
 			}
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			// philo->current_timer = ft_chrono(philo->current_time);
 			// philo->chrono = ft_chrono(philo->chrono_time);
 			if (ft_check_die(philo))
-				return (NULL);
+				return ;
 			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_sleep(philo);
 		}
@@ -347,6 +347,7 @@ void *ft_philo(void *arg)
 		ft_philo_peer(philo);
 	else
 		ft_philo_odd(philo);
+	return (NULL);
 }
 
 int		main(int a, char **b)
