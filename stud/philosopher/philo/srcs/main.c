@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/09 17:20:05 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:54:36 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,14 +187,19 @@ void	ft_eat(t_philo	*philo)
 		philo->status = 3;
 		return ;
 	}
+	philo->chrono = ft_chrono(philo->chrono_time);
+	printf("%d %d before %d\n",philo->current_timer, philo->philo,philo->chrono);
 	pthread_mutex_lock(&philo->forks[philo->philo]);
 	pthread_mutex_lock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
+	philo->chrono = ft_chrono(philo->chrono_time);
 	// printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
 	// printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
 	printf("%d %d is eating %d\n",philo->current_timer, philo->philo,philo->chrono);
 	usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
 	pthread_mutex_unlock(&philo->forks[philo->philo]);
 	pthread_mutex_unlock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
+	philo->chrono = ft_chrono(philo->chrono_time);
+	printf("%d %d drop forks %d\n",philo->current_timer, philo->philo,philo->chrono);
 	philo->status = 1;
 	if (philo->chrono > philo->time_to_die)
 	{
@@ -226,7 +231,7 @@ void	ft_sleep(t_philo *philo)
 		philo->status = 3;
 		return ;
 	}
-	printf("%d %d CHECKPOINT SLEEP %d\n",philo->current_timer, philo->philo,philo->chrono);
+	//printf("%d %d CHECKPOINT SLEEP %d\n",philo->current_timer, philo->philo,philo->chrono);
 	philo->current_timer = ft_chrono(philo->current_time);
 	philo->chrono = ft_chrono(philo->chrono_time);
 }
@@ -249,7 +254,7 @@ void ft_philo_odd(t_philo *philo)
 		{
 			if (ft_check_die(philo))
 				return ;
-			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
+			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			if (ft_check_die(philo))
 				return ;
@@ -304,7 +309,7 @@ void ft_philo_peer(t_philo *philo)
 		{
 			if (ft_check_die(philo))
 				return ;
-			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
+			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			// philo->chrono = ft_chrono(philo->chrono_time);
 			// philo->current_timer = ft_chrono(philo->current_time);
@@ -326,7 +331,7 @@ void ft_philo_peer(t_philo *philo)
 			}
 			if (ft_check_die(philo))
 				return ;
-			printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
+			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
 			ft_eat(philo);
 			// philo->current_timer = ft_chrono(philo->current_time);
 			// philo->chrono = ft_chrono(philo->chrono_time);

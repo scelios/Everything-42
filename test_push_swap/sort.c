@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 16:03:28 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/09 17:59:40 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/16 13:32:47 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	*ft_first_big_sort(t_dlist *dlist)
 	int	i;
 
 	nbr_of_group = malloc(sizeof(int) * 10000);
+	if (!nbr_of_group)
+		return (0);
 	dlist->size = 0;
 	while (ft_lstsize(dlist->a) > 2)
 	{

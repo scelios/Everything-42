@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 15:49:23 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/09 16:20:05 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/16 17:21:37 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ int	ft_check_numeric(int a, char **b)
 	{
 		j = 0;
 		if (b[i][0] == '-')
+		{
+			if (b[i][1] < '0' || b[i][1] > '9')
+				return (1);
 			j++;
+		}
 		if (ft_strlen(b[i] + j) >= 10 && ft_strncmp(b[i] + j, "2147483647", 10))
 			return (1);
 		while (b[i][j])

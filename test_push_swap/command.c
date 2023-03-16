@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 15:46:37 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/09 15:47:40 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/16 14:22:23 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,16 @@
 void	ft_pb(t_dlist *dlist)
 {
 	t_list	*first_a;
+	t_list	*mac;
 
 	first_a = dlist->a;
 	if (first_a != NULL)
 	{
 		dlist->a = first_a->next;
-		ft_lstadd_front(&(dlist->b), ft_lstnew(malloc(sizeof(int))));
+		mac = malloc(sizeof(int));
+		if (!mac)
+			return ;
+		ft_lstadd_front(&(dlist->b), ft_lstnew(mac));
 		*((int *) dlist->b->content) = *((int *)first_a->content);
 		free(first_a->content);
 		free(first_a);
@@ -31,12 +35,16 @@ void	ft_pb(t_dlist *dlist)
 void	ft_pa(t_dlist *dlist)
 {
 	t_list	*first_b;
+	t_list	*mac;
 
 	first_b = dlist->b;
 	if (first_b != NULL)
 	{
 		dlist->b = first_b->next;
-		ft_lstadd_front(&(dlist->a), ft_lstnew(malloc(sizeof(int))));
+		mac = malloc(sizeof(int));
+		if (!mac)
+			return ;
+		ft_lstadd_front(&(dlist->a), ft_lstnew(mac));
 		*((int *)dlist->a->content) = *((int *)first_b->content);
 		free(first_b->content);
 		free(first_b);
