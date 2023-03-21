@@ -6,11 +6,24 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/16 14:54:36 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:35:21 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+int	ft_return_timer(t_philo	*philo, int time);
+int	ft_chrono(struct timeval start);
+void	ft_wait(t_philo	*philo, int a)
+{
+	struct timeval	current;
+
+	gettimeofday(&current, NULL);
+	a = ft_return_timer(philo, a);
+	while (ft_chrono(current) < a)
+	{
+		usleep(100);
+	}
+}
 
 static int	ft_check_numeric(int a, char **b)
 {
@@ -64,75 +77,11 @@ int	ft_chrono(struct timeval start)
 	return ((current.tv_sec - start.tv_sec) * 1000 + (current.tv_usec - start.tv_usec) / 1000);
 }
 
-/*void *ft_philo_peer(void *arg)
-{
-	t_philo	*philo;
-	struct timeval	chrono;
-	struct timeval	current_time;
-	int		time_ms[2];
-	int		state;
-
-	state = 0;
-	gettimeofday(&chrono, NULL);
-	gettimeofday(&current_time, NULL);
-	philo = (t_philo *)arg;
-	while (philo->nb_must_eat != 0)
-	{
-		time_ms[0] = ft_chrono(current_time);
-		time_ms[1] = ft_chrono(chrono);
-		if (time_ms[1] >= philo->time_to_die)
-		{
-			printf("%d %d died %d OOOOOOOOOOOOOOO\n",time_ms[0], philo->philo, time_ms[1]);
-			break;
-		}
-		//printf("%d philo->nb_before_eat = %d\n",philo->philo, ++philo->nb_before_eat % 2);
-		if ((philo->nb_philo > 1 && ++philo->nb_before_eat % 2 )&&\
-		forks[philo->philo] == 0 &&	forks[(philo->philo + 1) % philo->nb_philo] == 0 )
-		{
-			// printf("%d %d has taken a fork\n",time_ms[0] , philo->philo);
-			// printf("%d %d has taken a fork\n",time_ms[0] , philo->philo);
-			printf("%d %d is eating\n",time_ms[0], philo->philo);
-			forks[philo->philo] = 1;
-			forks[(philo->philo + 1) % philo->nb_philo] = 1;
-			usleep(philo->time_to_eat * 1000);
-			philo->nb_must_eat--;
-			forks[philo->philo] = 0;
-			forks[(philo->philo + 1) % philo->nb_philo] = 0;
-			time_ms[0] = ft_chrono(current_time);
-			//printf("%d %d drops a fork\n",time_ms[0] , philo->philo);
-			state = 1;
-			gettimeofday(&chrono, NULL);
-			time_ms[1] = ft_chrono(chrono);
-			// printf("%d %d is sleeping\n",time_ms[0] , philo->philo);
-			// if (time_ms[1] + philo->time_to_sleep < philo->time_to_die)
-				// usleep(philo->time_to_sleep * 1000);
-			// else if (philo->time_to_die - time_ms[1] > 0)
-				// usleep((philo->time_to_die - time_ms[1]) * 1000);
-			state = 0;
-			printf("%d %d is sleeping\n",time_ms[0] , philo->philo);
-			if (time_ms[1] + philo->time_to_sleep < philo->time_to_die)
-				usleep(philo->time_to_sleep * 1000);
-			else if (philo->time_to_die - time_ms[1] > 0)
-				usleep((philo->time_to_die - time_ms[1]) * 1000);
-		}
-		//else if (philo->time_to_die - time_ms[1] - 50 > 0 && state != 1)
-		//else if (state == 0 && time_ms[1] + philo->time_to_eat < philo->time_to_die)
-		else if (state != 2 && time_ms[1] + philo->time_to_eat < philo->time_to_die)
-		{
-			printf("%d %d is thinking\n",time_ms[0] , philo->philo);
-			//if (time_ms[1] + philo->time_to_eat < philo->time_to_die)
-			usleep((philo->time_to_eat ) * 1000);
-			state = 2;
-		}
-	}
-	return (NULL);
-}*/
-
 int	ft_return_timer(t_philo	*philo, int time)
 {
 	philo->chrono = ft_chrono(philo->chrono_time);
 	philo->current_timer = ft_chrono(philo->current_time);
-	if (philo->chrono + time < philo->time_to_die)
+	if (philo->chrono + time <= philo->time_to_die)
 		return (time);
 	return (0);
 }
@@ -144,7 +93,9 @@ int	ft_check_die(t_philo *philo)
 	if (philo->chrono >= philo->time_to_die || philo->status == 3)
 	{
 		if (philo->status == 3)
-			usleep(ft_return_timer(philo, philo->time_to_die) * 1000);
+		{
+			ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
+		}
 		printf("%d %d died %d OOOOOOOOOOOOOOO\n", philo->current_timer, philo->philo, philo->chrono);
 		philo->status = 3;
 		return (1);
@@ -156,12 +107,12 @@ void	ft_think(t_philo *philo)
 {
 	if (philo->status == 2 || philo->status == 3)
 	{
-		usleep(ft_return_timer(philo, philo->time_to_die) * 1000);
+		ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
 		return ;
 	}
 	philo->status = 2;
 	printf("%d %d is thinking%d\n",philo->current_timer , philo->philo,philo->chrono);
-	usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
+	ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
 	philo->current_timer = ft_chrono(philo->current_time);
 	philo->chrono = ft_chrono(philo->chrono_time);
 	if (philo->chrono > philo->time_to_die)
@@ -172,30 +123,29 @@ void	ft_eat(t_philo	*philo)
 {
 	if (philo->status == 3)
 	{
-		usleep(ft_return_timer(philo, philo->time_to_die) * 1000);
+		ft_wait(philo,(ft_return_timer(philo, philo->time_to_die)));
 		return ;
 	}
-	//if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die
-	//|| philo->chrono > philo->time_to_die)
 	philo->chrono = ft_chrono(philo->chrono_time);
 	if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die)
 	{
-		if (philo->status != 2)
+		if (philo->status != 2){
 			printf("%d %d is thinking INSTEAD OF EATING %d\n",philo->current_timer , philo->philo, philo->chrono);
-		if (philo->time_to_die - philo->chrono > 0)
-			usleep(ft_return_timer(philo, philo->time_to_die - philo->chrono) * 1000);
+			ft_wait(philo,(ft_return_timer(philo, philo->time_to_die - philo->chrono)));
+		}
 		philo->status = 3;
 		return ;
 	}
 	philo->chrono = ft_chrono(philo->chrono_time);
-	printf("%d %d before %d\n",philo->current_timer, philo->philo,philo->chrono);
+	//printf("%d %d before %d\n",philo->current_timer, philo->philo,philo->chrono);
 	pthread_mutex_lock(&philo->forks[philo->philo]);
 	pthread_mutex_lock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
 	philo->chrono = ft_chrono(philo->chrono_time);
-	// printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
-	// printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
+	//! printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
+	//! printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
 	printf("%d %d is eating %d\n",philo->current_timer, philo->philo,philo->chrono);
-	usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
+	ft_wait(philo, philo->time_to_eat);
+	//usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
 	pthread_mutex_unlock(&philo->forks[philo->philo]);
 	pthread_mutex_unlock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
 	philo->chrono = ft_chrono(philo->chrono_time);
@@ -216,13 +166,14 @@ void	ft_sleep(t_philo *philo)
 {
 	if (philo->status != 1 || philo->status == 3)
 	{
-		usleep(ft_return_timer(philo, philo->time_to_die) * 1000);
+		ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
 		return ;
 	}
 	philo->chrono = ft_chrono(philo->chrono_time);
 	philo->current_timer = ft_chrono(philo->current_time);
 	printf("%d %d is sleeping%d  %d\n",philo->current_timer , philo->philo,philo->chrono,ft_return_timer(philo, philo->time_to_sleep));
-	usleep(ft_return_timer(philo, philo->time_to_sleep) * 1000);
+	ft_wait(philo, philo->time_to_sleep);
+	//usleep(ft_return_timer(philo, philo->time_to_sleep) * 1000);
 	philo->current_timer = ft_chrono(philo->current_time);
 	philo->chrono = ft_chrono(philo->chrono_time);
 	philo->status = 0;
@@ -283,7 +234,10 @@ void ft_philo_odd(t_philo *philo)
 				return ;
 			ft_think(philo);
 			if (first++ == 0 && !ft_check_die(philo))
-				usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
+			{
+				printf("%d %d is thinking%d\n",philo->current_timer , philo->philo,philo->chrono);
+				ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
+			}
 			if (ft_check_die(philo))
 				return ;
 			ft_eat(philo);
@@ -293,6 +247,7 @@ void ft_philo_odd(t_philo *philo)
 		}
 	}
 }
+
 
 void ft_philo_peer(t_philo *philo)
 {
