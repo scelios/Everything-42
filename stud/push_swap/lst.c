@@ -1,30 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strclen.c                                       :+:      :+:    :+:   */
+/*   lst.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/18 12:58:02 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/01/18 12:09:45 by beaudibe         ###   ########.fr       */
+/*   Created: 2023/03/09 16:01:07 by beaudibe          #+#    #+#             */
+/*   Updated: 2023/03/09 16:01:33 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-int	ft_strclen(char *s, char c)
+int	ft_lstmax(t_list *list)
 {
-	int	i;
+	int	max;
 
-	i = -1;
-	if (!s)
-		return (-1);
-	while (s[++i])
+	max = *(int *) list->content;
+	while (list)
 	{
-		if (s[i] == c)
-			return (i);
+		if (*(int *) list->content > max)
+			max = *(int *) list->content;
+		list = list->next;
 	}
-	if (c == 0)
-		return (i);
-	return (-1);
+	return (max);
+}
+
+int	ft_lstmin(t_list *list)
+{
+	int	min;
+
+	min = *(int *) list->content;
+	while (list)
+	{
+		if (*(int *) list->content < min)
+			min = *(int *) list->content;
+		list = list->next;
+	}
+	return (min);
 }

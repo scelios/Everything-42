@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: beaudibe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 10:05:55 by beaudibe          #+#    #+#             */
-/*   Updated: 2022/12/05 15:01:02 by beaudibe         ###   ########.fr       */
+/*   Updated: 2022/12/08 21:51:45 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include "unistd.h"
 # include "stdlib.h"
 # include "string.h"
-
+# include "ft_printf.h"
+# include "get_next_line.h"
 # include "stdio.h"
 
 typedef struct s_list
@@ -25,7 +26,7 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-t_list	*ft_lstnew(void	*content);
+t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 

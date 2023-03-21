@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_putstr_printf.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: beaudibe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 21:05:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2022/11/10 15:30:03 by beaudibe         ###   ########.fr       */
+/*   Created: 2022/09/29 16:56:57 by beaudibe          #+#    #+#             */
+/*   Updated: 2022/11/20 11:00:16 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-t_list	*ft_lstnew(void *content)
+int	ft_putstr_printf(char *s)
 {
-	t_list	*str;
+	int	i;
+	int	j;
 
-	str = malloc(sizeof(str));
-	if (!str)
-		return (0);
-	str->content = content;
-	str->next = 0;
-	return (str);
+	i = -1;
+	j = 0;
+	if (!s)
+		return (write(1, "(null)", 6));
+	while (s[++i])
+		j += write(1, &s[i], 1);
+	return (j);
 }

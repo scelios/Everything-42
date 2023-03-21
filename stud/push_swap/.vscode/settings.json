@@ -1,9 +1,0 @@
-{
-	"files.associations": {
-		"list": "c",
-		"algorithm": "c",
-		"random": "c",
-		"chrono": "c",
-		"iterator": "c"
-	}
-}
