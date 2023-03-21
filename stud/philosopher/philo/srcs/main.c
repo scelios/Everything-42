@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/21 18:35:21 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/03/21 18:46:46 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void	ft_eat(t_philo	*philo)
 		return ;
 	}
 	philo->chrono = ft_chrono(philo->chrono_time);
-	//printf("%d %d before %d\n",philo->current_timer, philo->philo,philo->chrono);
 	pthread_mutex_lock(&philo->forks[philo->philo]);
 	pthread_mutex_lock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
 	philo->chrono = ft_chrono(philo->chrono_time);
