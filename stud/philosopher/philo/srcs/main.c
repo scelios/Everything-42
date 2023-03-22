@@ -13,6 +13,8 @@
 #include "philo.h"
 int	ft_return_timer(t_philo	*philo, int time);
 int	ft_chrono(struct timeval start);
+
+
 void	ft_wait(t_philo	*philo, int a)
 {
 	struct timeval	current;
