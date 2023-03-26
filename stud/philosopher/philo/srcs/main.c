@@ -2,32 +2,20 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
 /*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
 /*   Updated: 2023/03/21 18:46:46 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-int	ft_return_timer(t_philo	*philo, int time);
-int	ft_chrono(struct timeval start);
 
-
-void	ft_wait(t_philo	*philo, int a)
-{
-	struct timeval	current;
-
-	gettimeofday(&current, NULL);
-	a = ft_return_timer(philo, a);
-	while (ft_chrono(current) < a)
-	{
-		usleep(100);
-	}
-}
-
-static int	ft_check_numeric(int a, char **b)
+int	ft_check_numeric(int a, char **b)
 {
 	int	i;
 	int	j;
@@ -38,7 +26,8 @@ static int	ft_check_numeric(int a, char **b)
 		j = 0;
 		if (b[i][0] == '-')
 			j++;
-		if (ft_strlen(b[i] + j) >= 10 && ft_strncmp(b[i] + j, "2147483647", 10))
+		if (ft_strlen(b[i] + j) >= 10 && ft_strncmp(b[i] + j, "2147483647",
+				10))
 			return (1);
 		while (b[i][j])
 		{
@@ -50,317 +39,85 @@ static int	ft_check_numeric(int a, char **b)
 	return (0);
 }
 
-static t_philo	ft_init_philo(int a, char **b)
+static int	ft_init_join_threads(t_philo philo, pthread_t *threads, \
+t_philo *philo_thread )
 {
-	t_philo	philo;
+	int	i;
+	int	died;
 
-	if (ft_check_numeric(a, b))
+	died = 0;
+	i = -1;
+	while (++i < philo.nb_philo)
 	{
-		ft_putstr_fd("Error: non numeric variable\n", 2);
-		philo.nb_philo = -1;
-		return (philo);
+		philo_thread[i] = philo;
+		philo_thread[i].philo = i + 1;
+		philo_thread[i].died = &died;
+		pthread_mutex_init(&philo.forks[i], NULL);
+		if (pthread_create(&threads[i], NULL, ft_philo, &philo_thread[i]) != 0)
+			return (1 + 0 * printf("Error: failed to create thread\n"));
 	}
-	philo.nb_philo = ft_atoi(b[1]);
-	philo.forks = malloc((philo.nb_philo + 1) * sizeof(pthread_mutex_t));
-	philo.time_to_die = ft_atoi(b[2]);
-	philo.time_to_eat = ft_atoi(b[3]);
-	philo.time_to_sleep = ft_atoi(b[4]);
-	philo.nb_must_eat = -1;
-	if (a == 6)
-		philo.nb_must_eat = ft_atoi(b[5]);
-	return (philo);
-}
-
-int	ft_chrono(struct timeval start)
-{
-	struct timeval	current;
-
-	gettimeofday(&current, NULL);
-	return ((current.tv_sec - start.tv_sec) * 1000 + (current.tv_usec - start.tv_usec) / 1000);
-}
-
-int	ft_return_timer(t_philo	*philo, int time)
-{
-	philo->chrono = ft_chrono(philo->chrono_time);
-	philo->current_timer = ft_chrono(philo->current_time);
-	if (philo->chrono + time <= philo->time_to_die)
-		return (time);
-	return (0);
-}
-
-int	ft_check_die(t_philo *philo)
-{
-	philo->chrono = ft_chrono(philo->chrono_time);
-	philo->current_timer = ft_chrono(philo->current_time);
-	if (philo->chrono >= philo->time_to_die || philo->status == 3)
+	i = -1;
+	while (++i < philo.nb_philo)
 	{
-		if (philo->status == 3)
-		{
-			ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
-		}
-		printf("%d %d died %d OOOOOOOOOOOOOOO\n", philo->current_timer, philo->philo, philo->chrono);
-		philo->status = 3;
-		return (1);
+		if (pthread_join(threads[i], NULL) != 0)
+			return (1 + 0 * printf("Error: failed to join thread\n"));
 	}
 	return (0);
 }
 
-void	ft_think(t_philo *philo)
+int	ft_if_free(t_philo philo, pthread_t *threads, t_philo *philo_thread)
 {
-	if (philo->status == 2 || philo->status == 3)
-	{
-		ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
-		return ;
-	}
-	philo->status = 2;
-	printf("%d %d is thinking%d\n",philo->current_timer , philo->philo,philo->chrono);
-	ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	if (philo->chrono > philo->time_to_die)
-		philo->status = 3;
+	free(philo.forks);
+	if (!threads)
+		free(philo_thread);
+	if (!philo_thread)
+		free(threads);
+	return (1);
 }
 
-void	ft_eat(t_philo	*philo)
-{
-	if (philo->status == 3)
-	{
-		ft_wait(philo,(ft_return_timer(philo, philo->time_to_die)));
-		return ;
-	}
-	philo->chrono = ft_chrono(philo->chrono_time);
-	if (philo->nb_philo < 2 || philo->chrono + philo->time_to_eat > philo->time_to_die)
-	{
-		if (philo->status != 2){
-			printf("%d %d is thinking INSTEAD OF EATING %d\n",philo->current_timer , philo->philo, philo->chrono);
-			ft_wait(philo,(ft_return_timer(philo, philo->time_to_die - philo->chrono)));
-		}
-		philo->status = 3;
-		return ;
-	}
-	philo->chrono = ft_chrono(philo->chrono_time);
-	pthread_mutex_lock(&philo->forks[philo->philo]);
-	pthread_mutex_lock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	//! printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
-	//! printf("%d %d has taken a fork\n",philo->current_timer, philo->philo);
-	printf("%d %d is eating %d\n",philo->current_timer, philo->philo,philo->chrono);
-	ft_wait(philo, philo->time_to_eat);
-	//usleep(ft_return_timer(philo, philo->time_to_eat) * 1000);
-	pthread_mutex_unlock(&philo->forks[philo->philo]);
-	pthread_mutex_unlock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	printf("%d %d drop forks %d\n",philo->current_timer, philo->philo,philo->chrono);
-	philo->status = 1;
-	if (philo->chrono > philo->time_to_die)
-	{
-		philo->status = 3;
-		return ;
-	}
-	gettimeofday(&philo->chrono_time, NULL);
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	philo->nb_must_eat--;
-}
-
-void	ft_sleep(t_philo *philo)
-{
-	if (philo->status != 1 || philo->status == 3)
-	{
-		ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
-		return ;
-	}
-	philo->chrono = ft_chrono(philo->chrono_time);
-	philo->current_timer = ft_chrono(philo->current_time);
-	printf("%d %d is sleeping%d  %d\n",philo->current_timer , philo->philo,philo->chrono,ft_return_timer(philo, philo->time_to_sleep));
-	ft_wait(philo, philo->time_to_sleep);
-	//usleep(ft_return_timer(philo, philo->time_to_sleep) * 1000);
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	philo->status = 0;
-	if (philo->chrono > philo->time_to_die)
-	{
-		philo->status = 3;
-		return ;
-	}
-	//printf("%d %d CHECKPOINT SLEEP %d\n",philo->current_timer, philo->philo,philo->chrono);
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-}
-
-void ft_philo_odd(t_philo *philo)
-{
-	int		first;
-
-	first = 0;
-	philo->status = -1;
-	gettimeofday(&philo->current_time, NULL);
-	gettimeofday(&philo->chrono_time, NULL);
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	while(philo->nb_must_eat != 0)
-	{
-		//philo->current_timer = ft_chrono(philo->current_time);
-		//philo->chrono = ft_chrono(philo->chrono_time);
-		if (philo->philo % 3 == 0)
-		{
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_eat(philo);
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_sleep(philo);
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_think(philo);
-		}
-		else if (philo->philo % 3 == 1)
-		{
-			if (ft_check_die(philo))
-				return ;
-			ft_think(philo);
-			if (ft_check_die(philo))
-				return ;
-			ft_eat(philo);
-			if (ft_check_die(philo))
-				return ;
-			ft_sleep(philo);
-		}
-		else if (philo->philo % 3 == 2)
-		{
-			if (ft_check_die(philo))
-				return ;
-			ft_think(philo);
-			if (first++ == 0 && !ft_check_die(philo))
-			{
-				printf("%d %d is thinking%d\n",philo->current_timer , philo->philo,philo->chrono);
-				ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
-			}
-			if (ft_check_die(philo))
-				return ;
-			ft_eat(philo);
-			if (ft_check_die(philo))
-				return ;
-			ft_sleep(philo);
-		}
-	}
-}
-
-
-void ft_philo_peer(t_philo *philo)
-{
-	philo->status = -1;
-	gettimeofday(&philo->current_time, NULL);
-	gettimeofday(&philo->chrono_time, NULL);
-	philo->current_timer = ft_chrono(philo->current_time);
-	philo->chrono = ft_chrono(philo->chrono_time);
-	while(philo->nb_must_eat != 0)
-	{
-		// philo->current_timer = ft_chrono(philo->current_time);
-		// philo->chrono = ft_chrono(philo->chrono_time);
-		if (philo->philo % 2 == 0)
-		{
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_eat(philo);
-			// philo->chrono = ft_chrono(philo->chrono_time);
-			// philo->current_timer = ft_chrono(philo->current_time);
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_sleep(philo);
-		}
-		else
-		{
-			if (ft_check_die(philo))
-				return ;
-			if (philo->status == -1)
-			{
-				ft_think(philo);
-				// philo->current_timer = ft_chrono(philo->current_time);
-				// philo->chrono = ft_chrono(philo->chrono_time);
-				philo->status = 2;
-			}
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_eat(philo);
-			// philo->current_timer = ft_chrono(philo->current_time);
-			// philo->chrono = ft_chrono(philo->chrono_time);
-			if (ft_check_die(philo))
-				return ;
-			//printf("%d %d CHECKPOINT %d\n",philo->current_timer, philo->philo,philo->chrono);
-			ft_sleep(philo);
-		}
-	}
-}
-
-void *ft_philo(void *arg)
+void	*ft_philo(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	if (philo->nb_philo % 2 == 0)
-		ft_philo_peer(philo);
+	{
+		if (ft_philo_peer(philo) == 1)
+			return ((void *)1);
+	}
 	else
-		ft_philo_odd(philo);
-	return (NULL);
+	{
+		if (ft_philo_odd(philo) == 1)
+			return ((void *)1);
+	}
+	return ((void *)0);
 }
 
-int		main(int a, char **b)
+int	main(int a, char **b)
 {
-	t_philo	philo;
-	pthread_t *threads;
-	t_philo *philo_thread;
-	int i;
+	t_philo		philo;
+	pthread_t	*threads;
+	t_philo		*philo_thread;
+	int			i;
 
 	if (a != 5 && a != 6)
-	{
-		printf("Error: wrong number of arguments\n");
-		return (1);
-	}
-	philo = ft_init_philo(a,b);
+		return (1 + 0 * printf("Error: wrong number of arguments\n"));
+	philo = ft_init_philo(a, b);
 	if (philo.nb_philo == -1)
 		return (1);
 	threads = malloc(sizeof(pthread_t) * philo.nb_philo);
 	philo_thread = malloc(sizeof(t_philo) * philo.nb_philo);
 	if (!philo_thread || !threads)
-	{
-		free(philo.forks);
-		if (!threads)
-			free(threads);
+		return (ft_if_free(philo, threads, philo_thread));
+	i = ft_init_join_threads(philo, threads, philo_thread);
+	if (i == 1)
 		return (1);
-	}
 	i = -1;
-	while(++i < philo.nb_philo)
-	{
-		philo_thread[i] = philo;
-		philo_thread[i].philo = i;
-		pthread_mutex_init(&philo.forks[i], NULL);
-		if (pthread_create(&threads[i], NULL, ft_philo, &philo_thread[i]) != 0)
-		{
-			printf("Error: failed to create thread\n");
-			return (1);
-		}
-	}
-	i = -1;
-	while(++i < philo.nb_philo)
-	{
-		if (pthread_join(threads[i], NULL) != 0)
-		{
-			printf("Error: failed to join thread\n");
-			return (1);
-		}
-	}
-	i = -1;
-	while(++i < philo.nb_philo)
+	while (++i < philo.nb_philo)
 		pthread_mutex_destroy(&philo.forks[i]);
 	free(philo.forks);
 	free(threads);
 	free(philo_thread);
+	free(philo.lock);
 	return (0);
 }

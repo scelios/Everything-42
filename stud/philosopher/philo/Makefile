@@ -1,6 +1,6 @@
 NAME = philo
 
-SRCS = ./srcs/main.c
+SRCS = ${shell find ./srcs -iname "*.c"}
 
 OBJS = ${SRCS:.c=.o}
 

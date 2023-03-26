@@ -15,9 +15,17 @@
 
 # include "stdio.h"
 # include "unistd.h"
-#include <sys/time.h>
+# include <sys/time.h>
 # include "../libft/includes/libft.h"
 # include <pthread.h>
+
+# define LOCK 1
+# define UNLOCK 0
+
+# define SLEEP 0
+# define EAT 1
+# define THINK 2
+# define DIED 3
 
 typedef struct s_philo
 {
@@ -32,7 +40,26 @@ typedef struct s_philo
 	int				current_timer;
 	struct timeval	current_time;
 	struct timeval	chrono_time;
-	pthread_mutex_t *forks;
+	int				*died;
+	int				*lock;
+	pthread_mutex_t	*forks;
 }	t_philo;
+
+void	*ft_philo(void *arg);
+void	ft_sleep(t_philo *philo);
+void	ft_think(t_philo *philo);
+void	ft_wait(t_philo *philo, int a);
+void	ft_eat(t_philo *philo);
+
+int		ft_return_timer(t_philo *philo, int time);
+int		ft_chrono(struct timeval start);
+int		ft_check_die(t_philo *philo);
+int		ft_check_numeric(int a, char **b);
+int		ft_return_timer(t_philo *philo, int time);
+int		ft_chrono(struct timeval start);
+int		ft_philo_odd(t_philo *philo);
+int		ft_philo_peer(t_philo *philo);
+
+t_philo	ft_init_philo(int a, char **b);
 
 #endif
