@@ -2,14 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+
-	+:+     */
-/*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+
-	+#+        */
-/*                                                +#+#+#+#+#+
-	+#+           */
-/*   Created: 2023/02/07 10:58:41 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/03/21 18:46:46 by beaudibe         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/17 21:16:04 by beaudibe          #+#    #+#             */
+/*   Updated: 2023/05/17 21:16:04 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,10 +114,8 @@ int	main(int a, char **b)
 	while (++i < philo.nb_philo)
 		pthread_mutex_destroy(&philo.forks[i]);
 	pthread_mutex_destroy(&philo.print_mutex[0]);
-	free(philo.print_mutex);
-	free(philo.forks);
+	ft_free_main(philo);
 	free(threads);
 	free(philo_thread);
-	free(philo.lock);
 	return (0);
 }

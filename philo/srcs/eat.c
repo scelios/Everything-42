@@ -19,8 +19,6 @@ int	ft_trylock(t_philo *philo)
 	{
 		if (philo->status != THINK)
 		{
-
-			//printf("%d %d is thinking\n", philo->current_timer, philo->philo);
 			ft_write(philo, THINK);
 			philo->status = THINK;
 		}

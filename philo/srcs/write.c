@@ -27,7 +27,7 @@ int	ft_check_die_write(t_philo *philo)
 		if (philo->status == DIED)
 			ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
 		unlock_mutex(philo);
-		printf("%d %d died bobi %d\n", philo->current_timer, philo->philo, philo->chrono);
+		printf("%d %d died\n", philo->current_timer, philo->philo);
 		philo->status = DIED;
 		*philo->died = 1;
 		return (1);
@@ -37,27 +37,10 @@ int	ft_check_die_write(t_philo *philo)
 
 void	ft_write(t_philo *philo, int a)
 {
-	//static int	died;
-	//static int	first;
-
-	/*while (first == 1)
-	{
-		if (ft_check_die_write(philo) == 1 && died == 0)
-		{
-			died = 1;
-			return;
-		}
-		usleep(1);
-	}*/
-	//while (first == 1)
-	//	usleep(1);
 	pthread_mutex_lock(&philo->print_mutex[0]);
-	//first = 1;
-	//*philo->died = ft_check_die_write(philo);
 	if (ft_check_die_write(philo) == 1)
 	{
 		pthread_mutex_unlock(&philo->print_mutex[0]);
-	//	first = 0;
 		return ;
 	}
 	ft_chrono(philo->current_time);
@@ -73,9 +56,8 @@ void	ft_write(t_philo *philo, int a)
 	}
 	else if (a == DIED)
 	{
-		printf("%d %d died %d\n", philo->current_timer, philo->philo, philo->chrono);
 		*philo->died = 1;
+		printf("%d %d died\n", philo->current_timer, philo->philo);
 	}
 	pthread_mutex_unlock(&philo->print_mutex[0]);
-	//first = 0;
 }

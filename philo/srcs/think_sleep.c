@@ -54,8 +54,6 @@ void	ft_think(t_philo *philo)
 		return ;
 	}
 	philo->status = THINK;
-
-	//printf("%d %d is thinking\n", philo->current_timer, philo->philo);
 	ft_write(philo, THINK);
 	ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
 	philo->current_timer = ft_chrono(philo->current_time);
@@ -70,8 +68,6 @@ void	ft_sleep(t_philo *philo)
 		return ;
 	philo->chrono = ft_chrono(philo->chrono_time);
 	philo->current_timer = ft_chrono(philo->current_time);
-
-	//printf("%d %d is sleeping\n", philo->current_timer, philo->philo);
 	ft_write(philo, SLEEP);
 	ft_wait(philo, philo->time_to_sleep);
 	philo->current_timer = ft_chrono(philo->current_time);

@@ -44,12 +44,12 @@ int	*ft_first_big_sort(t_dlist *dlist)
 void	ft_cut_by_2_a(t_dlist *dlist, int len)
 {
 	int	median;
-	int	nbr[10000];
+	//int	nbr[10000];
 	int	i;
-	int	j;
+	//int	j;
 	int	rotate_a;
 
-	j = 1;
+	//j = 1;
 	while (ft_lstsize(dlist->a) > 2 + ft_len_is_sort(dlist->a, 1))
 	{
 		median = ft_median(dlist->a, len);
@@ -62,11 +62,11 @@ void	ft_cut_by_2_a(t_dlist *dlist, int len)
 			else if (*(int *)dlist->a->content >= median && ++rotate_a)
 				ft_ra(dlist);
 		}
-		nbr[j++] = i;
+		//nbr[j++] = i;
 		while (rotate_a-- > 0)
 			ft_rra(dlist);
 	}
-	nbr[0] = j;
+	//nbr[0] = j;
 	ft_resolve_little(dlist);
 }
 

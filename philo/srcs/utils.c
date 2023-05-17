@@ -48,12 +48,10 @@ t_philo	ft_init_philo(int a, char **b)
 	philo.nb_philo = ft_atoi(b[1]);
 	philo.forks = malloc((philo.nb_philo + 1) * sizeof(pthread_mutex_t));
 	philo.print_mutex = malloc(sizeof(pthread_mutex_t));
-
 	philo.time_to_die = ft_atoi(b[2]);
 	philo.time_to_eat = ft_atoi(b[3]);
 	philo.time_to_sleep = ft_atoi(b[4]);
 	philo.nb_must_eat = -1;
-
 	philo.lock = ft_calloc(philo.nb_philo + 1, sizeof(int));
 	if (a == 6)
 		philo.nb_must_eat = ft_atoi(b[5]);

@@ -47,7 +47,7 @@ typedef struct s_philo
 	pthread_mutex_t	*print_mutex;
 }	t_philo;
 
-void init_write_mutex(t_philo *philo);
+void	init_write_mutex(t_philo *philo);
 void	*ft_philo(void *arg);
 void	ft_sleep(t_philo *philo);
 void	ft_think(t_philo *philo);
@@ -55,6 +55,7 @@ void	ft_wait(t_philo *philo, int a);
 void	ft_eat(t_philo *philo);
 void	ft_write(t_philo *philo, int a);
 void	unlock_mutex(t_philo *philo);
+void	ft_free_main(t_philo philo);
 
 int		ft_return_timer(t_philo *philo, int time);
 int		ft_chrono(struct timeval start);

@@ -30,7 +30,7 @@ void	ft_rra(t_dlist *dlist)
 {
 	t_list	*last;
 	t_list	*current;
-	t_list	*first;
+	//t_list	*first;
 
 	if (dlist->a != NULL && dlist->a->next != NULL)
 	{
@@ -38,7 +38,7 @@ void	ft_rra(t_dlist *dlist)
 		while (current->next->next != NULL)
 			current = current->next;
 		last = ft_lstlast(dlist->a);
-		first = dlist->a->next;
+		//first = dlist->a->next;
 		current->next = NULL;
 		last->next = dlist->a;
 		dlist->a = last;
@@ -50,7 +50,7 @@ void	ft_rrb(t_dlist *dlist)
 {
 	t_list	*last;
 	t_list	*current;
-	t_list	*first;
+	//t_list	*first;
 
 	if (dlist->b != NULL && dlist->b->next != NULL)
 	{
@@ -58,7 +58,7 @@ void	ft_rrb(t_dlist *dlist)
 		while (current->next->next != NULL)
 			current = current->next;
 		last = ft_lstlast(dlist->b);
-		first = dlist->b->next;
+		//first = dlist->b->next;
 		current->next = NULL;
 		last->next = dlist->b;
 		dlist->b = last;
