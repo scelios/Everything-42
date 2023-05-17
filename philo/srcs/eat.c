@@ -19,15 +19,14 @@ int	ft_trylock(t_philo *philo)
 	{
 		if (philo->status != THINK)
 		{
-			printf("%d %d is thinking %d\n", philo->current_timer, \
-			philo->philo, philo->chrono);
+
+			//printf("%d %d is thinking\n", philo->current_timer, philo->philo);
+			ft_write(philo, THINK);
 			philo->status = THINK;
 		}
 		if (ft_check_die(philo))
 		{
 			philo->status = DIED;
-			printf("%d %d died  HAHAHAHAHAHAHAHA %d\n", philo->current_timer, \
-			philo->philo, philo->chrono);
 			return (1);
 		}
 		usleep(100);
@@ -43,10 +42,7 @@ t_philo	*ft_make_eat(t_philo *philo)
 	philo->lock[philo->philo] = LOCK;
 	philo->lock[(philo->philo + 1) % philo->nb_philo] = LOCK;
 	philo->chrono = ft_chrono(philo->chrono_time);
-	printf("%d %d has taken a fork\n", philo->current_timer, philo->philo);
-	printf("%d %d has taken a fork\n", philo->current_timer, philo->philo);
-	printf("%d %d is eating %d\n", philo->current_timer, philo->philo, \
-	philo->chrono);
+	ft_write(philo, EAT);
 	ft_wait(philo, philo->time_to_eat);
 	pthread_mutex_unlock(&philo->forks[philo->philo]);
 	pthread_mutex_unlock(&philo->forks[(philo->philo + 1) % philo->nb_philo]);
@@ -68,11 +64,9 @@ void	ft_eat(t_philo *philo)
 		+ philo->time_to_eat > philo->time_to_die)
 	{
 		if (philo->status != THINK)
-			printf("%d %d is thinking %d\n", philo->current_timer, \
-			philo->philo, philo->chrono);
+			ft_write(philo, THINK);
 		ft_wait(philo, (ft_return_timer(philo, \
 		philo->time_to_die - philo->chrono)));
-		philo->status = DIED;
 		return ;
 	}
 	if (ft_trylock(philo))

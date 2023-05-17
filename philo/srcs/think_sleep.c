@@ -38,8 +38,7 @@ int	ft_check_die(t_philo *philo)
 		if (philo->status == DIED)
 			ft_wait(philo, ft_return_timer(philo, philo->time_to_die));
 		unlock_mutex(philo);
-		printf("%d %d died %d\n", philo->current_timer, philo->philo, \
-		philo->chrono);
+		ft_write(philo, DIED);
 		philo->status = DIED;
 		*philo->died = 1;
 		return (1);
@@ -55,8 +54,9 @@ void	ft_think(t_philo *philo)
 		return ;
 	}
 	philo->status = THINK;
-	printf("%d %d is thinking%d\n", philo->current_timer, philo->philo, \
-	philo->chrono);
+
+	//printf("%d %d is thinking\n", philo->current_timer, philo->philo);
+	ft_write(philo, THINK);
 	ft_wait(philo, ft_return_timer(philo, philo->time_to_eat));
 	philo->current_timer = ft_chrono(philo->current_time);
 	philo->chrono = ft_chrono(philo->chrono_time);
@@ -70,8 +70,9 @@ void	ft_sleep(t_philo *philo)
 		return ;
 	philo->chrono = ft_chrono(philo->chrono_time);
 	philo->current_timer = ft_chrono(philo->current_time);
-	printf("%d %d is sleeping %d\n", philo->current_timer, philo->philo, \
-	philo->chrono);
+
+	//printf("%d %d is sleeping\n", philo->current_timer, philo->philo);
+	ft_write(philo, SLEEP);
 	ft_wait(philo, philo->time_to_sleep);
 	philo->current_timer = ft_chrono(philo->current_time);
 	philo->chrono = ft_chrono(philo->chrono_time);

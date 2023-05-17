@@ -53,6 +53,7 @@ t_philo *philo_thread )
 		philo_thread[i].philo = i + 1;
 		philo_thread[i].died = &died;
 		pthread_mutex_init(&philo.forks[i], NULL);
+		pthread_mutex_init(&philo.print_mutex[0], NULL);
 		if (pthread_create(&threads[i], NULL, ft_philo, &philo_thread[i]) != 0)
 			return (1 + 0 * printf("Error: failed to create thread\n"));
 	}
@@ -115,6 +116,8 @@ int	main(int a, char **b)
 	i = -1;
 	while (++i < philo.nb_philo)
 		pthread_mutex_destroy(&philo.forks[i]);
+	pthread_mutex_destroy(&philo.print_mutex[0]);
+	free(philo.print_mutex);
 	free(philo.forks);
 	free(threads);
 	free(philo_thread);

@@ -26,10 +26,12 @@ void	ft_wait(t_philo *philo, int a)
 
 int	ft_free(t_philo philo)
 {
-	if (!philo.forks)
+	if (philo.lock)
 		free(philo.lock);
-	if (!philo.lock)
+	if (philo.forks)
 		free(philo.forks);
+	if (philo.print_mutex)
+		free(philo.print_mutex);
 	return (-1);
 }
 
@@ -45,14 +47,17 @@ t_philo	ft_init_philo(int a, char **b)
 	}
 	philo.nb_philo = ft_atoi(b[1]);
 	philo.forks = malloc((philo.nb_philo + 1) * sizeof(pthread_mutex_t));
+	philo.print_mutex = malloc(sizeof(pthread_mutex_t));
+
 	philo.time_to_die = ft_atoi(b[2]);
 	philo.time_to_eat = ft_atoi(b[3]);
 	philo.time_to_sleep = ft_atoi(b[4]);
 	philo.nb_must_eat = -1;
+
 	philo.lock = ft_calloc(philo.nb_philo + 1, sizeof(int));
 	if (a == 6)
 		philo.nb_must_eat = ft_atoi(b[5]);
-	if (!philo.forks || !philo.lock)
+	if (!philo.forks || !philo.lock || !philo.print_mutex)
 		philo.nb_philo = ft_free(philo);
 	return (philo);
 }
