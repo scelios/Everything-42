@@ -5,7 +5,7 @@ SRCS = ${shell find ./srcs -iname "*.c"}
 OBJS = ${SRCS:.c=.o}
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes
+CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=thread -g
 
 RM = rm -rf
 
