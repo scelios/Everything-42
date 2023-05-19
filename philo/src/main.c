@@ -29,6 +29,7 @@ static t_philo *init_philo(int nb_philo, int a, char **b, t_main *main)
 	{
 		pthread_mutex_init(&philo[i].forks, NULL);
 		pthread_mutex_init(&philo[i].param_mutex, NULL);
+		pthread_mutex_init(&philo[i].time_mutex, NULL);
 		philo[i].print_mutex = &main->print_mutex;
 		philo[i].id = i;
 		philo[i].params.nb_philo = nb_philo;
@@ -68,8 +69,9 @@ static void destruct(t_main *main)
 	i = -1;
 	while (++i < main->nb_philo)
 	{
-		pthread_mutex_destroy(&main->philo[i].forks);
-		pthread_mutex_destroy(&main->philo[i].param_mutex);
+		// pthread_mutex_destroy(&main->philo[i].forks);
+		// pthread_mutex_destroy(&main->philo[i].param_mutex);
+		// pthread_mutex_destroy(&main->philo[i].time_mutex);
 	}
 	pthread_mutex_lock(&main->print_mutex);
 	free(main->philo);

@@ -30,16 +30,8 @@ static int	all_have_eaten(t_main *main)
 
 static int	is_dead(t_philo *philo)
 {
-	t_time	time;
-	int		time_to_die;
-	int		status;
-	pthread_mutex_lock(&philo->param_mutex);
-	return_timer(&philo->time);
-	time = philo->time;
-	status = philo->status;
-	time_to_die = philo->params.time_to_die;
-	pthread_mutex_unlock(&philo->param_mutex);
-	if (time.until_die > time_to_die && status != END)
+	return_timer(&philo->time, philo);
+	if (philo->time.until_die > philo->params.time_to_die && philo->status != END)
 		return (TRUE);
 	return (FALSE);
 }
@@ -56,11 +48,8 @@ void death_watcher(t_main *main)
 			if (is_dead(&main->philo[i]) == TRUE)
 			{
 				pthread_mutex_lock(&main->print_mutex);
-				pthread_mutex_lock(&main->philo[i].param_mutex);
-				if (main->philo[i].status != END)
-					printf("%d %d died\n", main->philo[i].time.now, \
-						main->philo[i].id);
-				pthread_mutex_unlock(&main->philo[i].param_mutex);
+				printf("%d %d died\n", main->philo[i].time.now, \
+				main->philo[i].id);
 				pthread_mutex_unlock(&main->print_mutex);
 				return ;
 			}

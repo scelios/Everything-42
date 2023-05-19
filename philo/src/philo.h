@@ -36,6 +36,7 @@ typedef struct s_time
 	int now;
 	struct timeval current;
 	struct timeval eat;
+
 } t_time;
 
 typedef struct s_param
@@ -60,6 +61,7 @@ typedef struct s_philo
 	pthread_t thread;
 	pthread_mutex_t *print_mutex;
 	pthread_mutex_t param_mutex;
+	pthread_mutex_t time_mutex;
 	pthread_mutex_t forks;
 	t_time time;
 	t_param params;
@@ -88,7 +90,7 @@ void	*philo_routine_even(void *arg);
 void	*philo_routine_odd(void *arg);
 
 int		chrono(struct timeval start);
-void	return_timer(t_time *time);
+void	return_timer(t_time *time, t_philo *philo);
 int		ft_check_numeric(int a, char **b);
 void	ft_usleep(int n);
 t_time	init_time(void);

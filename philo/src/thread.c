@@ -69,11 +69,11 @@ t_thread *create_and_detach_threads_odd(t_main *main)
 			free(new);
 			return (NULL);
 		}
-		pthread_detach(new->main->philo[i].thread);
+		//pthread_detach(new->main->philo[i].thread);
 	}
-	// i = -1;
-	// while (++i < main->nb_philo)
-		// pthread_detach(new->main->philo[i].thread);
+	i = -1;
+	while (++i < main->nb_philo)
+		pthread_detach(new->main->philo[i].thread);
 	return (new);
 }
 

@@ -21,10 +21,12 @@ int	chrono(struct timeval start)
 	+ (current.tv_usec - start.tv_usec) / 1000);
 }
 
-void	return_timer(t_time *time)
+void	return_timer(t_time *time, t_philo *philo)
 {
+	pthread_mutex_lock(&philo->time_mutex);
 	time->until_die = chrono(time->eat);
 	time->now = chrono(time->current);
+	pthread_mutex_unlock(&philo->time_mutex);
 }
 
 void	ft_usleep(int n)
