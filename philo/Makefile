@@ -1,22 +1,21 @@
 NAME = philo
 
-SRCS = ${shell find ./srcs -iname "*.c"}
+SRCS = ${shell find ./src -iname "*.c"}
 
 OBJS = ${SRCS:.c=.o}
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=thread -g
+# CFLAGS = -Wall -Wextra -Werror -D_THREAD_SAFE -Iincludes -fsanitize=thread -g
+CFLAGS = -Iincludes -fsanitize=thread -g -pthread
 
 RM = rm -rf
 
 all: ${NAME}
 ${NAME}: ${OBJS}
-	# @${MAKE} -C ./libft./libft/libft.a -o
 	@${CC} ${CFLAGS} ${OBJS} -o ${NAME}
 
 
 clean:
-	# @${MAKE} -C ./libft fclean
 	@${RM} ${OBJS}
 
 fclean: clean
