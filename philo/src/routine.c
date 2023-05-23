@@ -5,111 +5,114 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/18 21:51:45 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/05/18 21:51:45 by beaudibe         ###   ########.fr       */
+/*   Created: 2023/05/22 12:54:27 by beaudibe          #+#    #+#             */
+/*   Updated: 2023/05/22 12:54:27 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/*void	*philo_routine_even(void *arg)
+void	ft_sleep(t_main *main, int id)
 {
-	t_philo	*philo;
-	int		time_to_die;
+	int	time;
 
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->time.consult_mutex);
-	time_to_die = philo->params.time_to_die;
-	pthread_mutex_unlock(&philo->time.consult_mutex);
-	if (philo->id == 1)
+	if (should_stop(main) == TRUE)
+		return ;
+	pthread_mutex_lock(&main->time_mutex[id]);
+	time = main->philo[id].params.time_to_sleep;
+	pthread_mutex_unlock(&main->time_mutex[id]);
+	ft_write(main, id, SLEEPING);
+	ft_usleep(time);
+}
+
+void	ft_think(t_main *main, int id)
+{
+	int	time;
+
+	if (should_stop(main) == TRUE)
+		return ;
+	ft_write(main, id, THINKING);
+	pthread_mutex_lock(&main->time_mutex[id]);
+	time = smaller(main->philo->params.time_to_sleep, \
+					main->philo->params.time_to_eat);
+	pthread_mutex_unlock(&main->time_mutex[id]);
+	if (time < 0)
+		return ;
+	ft_write(main, id, THINKING);
+	ft_usleep(time);
+}
+
+int	routine_even(t_main *main, int id, int first, int *eat)
+{
+	if (main->nb_philo % 2 == 1 && first == 0)
 	{
-		ft_usleep(time_to_die + 1);
+		ft_write(main, id, THINKING);
+		ft_usleep(main->philo->params.time_to_eat);
 	}
-	pthread_mutex_lock(philo->print_mutex);
-	pthread_mutex_lock(&philo->time.consult_mutex);
-	printf("%d %d even\n", philo->time.now, philo->id);
-	pthread_mutex_unlock(&philo->time.consult_mutex);
-	pthread_mutex_unlock(philo->print_mutex);
-	pthread_mutex_lock(&philo->status_mutex);
-	philo->status = END;
-	pthread_mutex_unlock(&philo->status_mutex);
-	return (NULL);
-}*/
-
-void	eat(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->time_mutex);
-	pthread_mutex_lock(philo->print_mutex);
-	printf("%d %d is eating\n", philo->time.now, philo->id);
-	pthread_mutex_unlock(philo->print_mutex);
-	pthread_mutex_unlock(&philo->time_mutex);
-
-	pthread_mutex_lock(&philo->forks);
-	ft_usleep(philo->params.time_to_eat);
-	pthread_mutex_unlock(&philo->forks);
-
-	pthread_mutex_lock(&philo->time_mutex);
-	gettimeofday(&philo->time.eat, NULL);
-	pthread_mutex_unlock(&philo->time_mutex);
+	if (should_stop(main) == TRUE)
+		return (ERROR);
+	ft_eat(main, id);
+	if (--*eat == 0 || should_stop(main) == TRUE)
+		return (ERROR);
+	ft_sleep(main, id);
+	if (should_stop(main) == TRUE)
+		return (ERROR);
+	return (SUCCESS);
 }
 
-void	*philo_routine_even(void *arg)
+int	routine_odd(t_main *main, int id, int first, int *eat)
 {
-	(void)arg;
-	/*t_philo	*philo;
-	t_param	param;
-	int		id;
-	static int i;
-
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->param_mutex);
-	param = philo->params;
-	id = philo->id;
-	pthread_mutex_unlock(&philo->param_mutex);
-	while (nb_must_eat--)
+	if (is_useless(main, id) == TRUE)
+		return (ERROR);
+	if ((first == 0 && id % 3 != 0) || (first == 1 && id % 3 == 2))
 	{
-		if (id % 2 == 0)
-		{
-			eat(philo, param);
-			sleep(philo, param);
-		}
-		else
-		{
-			if (i++ == 0)
-				ft_usleep(param.time_to_eat);
-			eat(philo, param);
-			sleep(philo, param);
-		}
-	}*/
-	return (NULL);
+		if (first == 0)
+			ft_think(main, id);
+		else if (first == 1 && id % 3 == 2)
+			ft_think(main, id);
+		if (should_stop(main) == TRUE)
+			return (ERROR);
+	}
+	else
+	{
+		ft_eat(main, id);
+		if (should_stop(main) == TRUE || --*eat == 0)
+			return (ERROR);
+		ft_sleep(main, id);
+		if (should_stop(main) == TRUE)
+			return (ERROR);
+		ft_think(main, id);
+		if (should_stop(main) == TRUE)
+			return (ERROR);
+	}
+	return (SUCCESS);
 }
 
-void *philo_routine_odd(void *arg)
+void	*philo_routine(void *arg)
 {
-	t_thread *thread;
-	int id;
-	t_philo *philo;
+	t_thread	*thread;
+	int			id;
+	int			i;
+	int			eat;
+	t_main		*main;
 
 	thread = (t_thread *)arg;
-
-	pthread_mutex_lock(&thread->main->philo[thread->id].param_mutex);
-	philo = &thread->main->philo[thread->id];
+	i = 0;
+	pthread_mutex_lock(&thread->main->param_mutex[thread->id]);
 	id = thread->id;
-	pthread_mutex_unlock(&thread->main->philo[id].param_mutex);
-
-	while (philo->params.nb_must_eat != 0)
+	main = thread->main;
+	eat = main->philo->params.nb_must_eat;
+	pthread_mutex_unlock(&thread->main->param_mutex[thread->id]);
+	while (eat != 0 && should_stop(main) == FALSE)
 	{
-		eat(philo);
-
-		pthread_mutex_lock(&philo->param_mutex);
-		philo->params.nb_must_eat--;
-		pthread_mutex_unlock(&philo->param_mutex);
+		if (main->nb_philo % 2 == 0 && routine_even(main, id, i++, &eat) == -2)
+			break ;
+		else if (main->nb_philo % 2 == 1 \
+		&& routine_odd(main, id, i++, &eat) == ERROR)
+			break ;
 	}
-
-	pthread_mutex_lock(&philo->param_mutex);
-	philo->status = END;
-	pthread_mutex_unlock(&philo->param_mutex);
-
-	return NULL;
+	if (should_stop(main) == TRUE)
+		return (NULL);
+	change_status(main, id, END);
+	return (NULL);
 }
-

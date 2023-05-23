@@ -1,0 +1,25 @@
+NAME = philo
+
+SRCS = ${shell find ./srcs -iname "*.c"}
+
+OBJS = ${SRCS:.c=.o}
+
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=thread -g
+
+RM = rm -rf
+
+all: ${NAME}
+${NAME}: ${OBJS}
+	@${CC} ${CFLAGS} ${OBJS} -o ${NAME}
+
+
+clean:
+	@${RM} ${OBJS}
+
+fclean: clean
+	@${RM} ${NAME}
+
+re: fclean all
+
+.PHONY: all clean fclean re
