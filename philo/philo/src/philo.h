@@ -28,7 +28,9 @@
 # define EATING 1
 # define SLEEPING 2
 # define THINKING 3
-# define END 4
+# define DIED 4
+
+# define END 5
 
 typedef struct s_time
 {

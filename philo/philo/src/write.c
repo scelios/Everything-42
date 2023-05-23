@@ -11,6 +11,24 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+/*
+void	print(t_main *main, int id, int a, int time_now)
+{
+	pthread_mutex_lock(&main->print_mutex);
+	if (a == EATING)
+	{
+		printf("%d %d has taken a fork \n", time_now, id);
+		printf("%d %d has taken a fork \n", time_now, id);
+		printf("%d %d is eating\n", time_now, id);
+	}
+	else if (a == THINKING)
+		printf("%d %d is thinking\n", time_now, id);
+	else if (a == SLEEPING)
+		printf("%d %d is sleeping\n", time_now, id);
+	else if (a == DIED)
+		printf("%d %d died\n", time_now, id);
+	pthread_mutex_unlock(&main->print_mutex);
+}*/
 
 void	ft_write(t_main *main, int id, int a)
 {
@@ -34,5 +52,7 @@ void	ft_write(t_main *main, int id, int a)
 		printf("%d %d is thinking\n", time_now, id);
 	else if (a == SLEEPING)
 		printf("%d %d is sleeping\n", time_now, id);
+	else if (a == DIED)
+		printf("%d %d died\n", time_now, id);
 	pthread_mutex_unlock(&main->print_mutex);
 }

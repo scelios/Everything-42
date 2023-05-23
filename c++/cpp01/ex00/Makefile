@@ -7,7 +7,7 @@
 #                                     CONFIG                                   #
 ################################################################################
 
-NAME        := megaphone
+NAME        := zombie
 CC         := c++
 FLAGS    := -Wall -Wextra -Werror -std=c++98
  
@@ -15,7 +15,10 @@ FLAGS    := -Wall -Wextra -Werror -std=c++98
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-SRCS        :=      megaphone.cpp \
+SRCS        :=      main.cpp \
+                          newZombie.cpp \
+                          randomChump.cpp \
+                          Zombie.cpp \
                           
 OBJS        := ${SRCS:.cpp=.o}
 

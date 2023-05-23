@@ -35,20 +35,6 @@ static void	destruct(t_main *main, t_thread *thread)
 	int	i;
 
 	i = 0;
-	while (i < main->nb_philo)
-	{
-		if ((i + 1) % main->nb_philo != 0)
-			pthread_mutex_lock(&main->forks_mutex[(i + 1) % main->nb_philo]);
-		pthread_mutex_lock(&main->forks_mutex[i % main->nb_philo]);
-		i += 2;
-	}
-	pthread_mutex_lock(&main->print_mutex);
-	pthread_mutex_lock(&main->dead_mutex);
-	while (++i < main->nb_philo)
-	{
-		pthread_mutex_lock(&main->time_mutex[i]);
-		pthread_mutex_lock(&main->param_mutex[i]);
-	}
 	free(main->philo);
 	if (thread != NULL)
 		free(thread);

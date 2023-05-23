@@ -44,9 +44,8 @@ void	ft_think(t_main *main, int id)
 
 int	routine_even(t_main *main, int id, int first, int *eat)
 {
-	if (main->nb_philo % 2 == 1 && first == 0)
+	if (id % 2 && first == 0)
 	{
-		ft_write(main, id, THINKING);
 		ft_usleep(main->philo->params.time_to_eat);
 	}
 	if (should_stop(main) == TRUE)
@@ -67,9 +66,9 @@ int	routine_odd(t_main *main, int id, int first, int *eat)
 	if ((first == 0 && id % 3 != 0) || (first == 1 && id % 3 == 2))
 	{
 		if (first == 0)
-			ft_think(main, id);
+			ft_usleep(main->philo->params.time_to_eat);
 		else if (first == 1 && id % 3 == 2)
-			ft_think(main, id);
+			ft_usleep(main->philo->params.time_to_eat);
 		if (should_stop(main) == TRUE)
 			return (ERROR);
 	}
@@ -111,8 +110,6 @@ void	*philo_routine(void *arg)
 		&& routine_odd(main, id, i++, &eat) == ERROR)
 			break ;
 	}
-	if (should_stop(main) == TRUE)
-		return (NULL);
 	change_status(main, id, END);
 	return (NULL);
 }

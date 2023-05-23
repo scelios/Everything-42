@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 12:53:09 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/05/22 12:53:09 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/05/23 16:09:18 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,16 @@ void	death_watcher(t_main *main)
 		{
 			if (is_dead(main, id) == SUCCESS)
 			{
-				pthread_mutex_lock(&main->print_mutex);
-				printf("%d %d died\n", main->philo[id].time.now, \
-						main->philo[id].id);
-				pthread_mutex_unlock(&main->print_mutex);
+				ft_write(main, id, DIED);
 				pthread_mutex_lock(&main->dead_mutex);
 				main->dead = TRUE;
 				pthread_mutex_unlock(&main->dead_mutex);
+				while (all_have_eaten(main) != SUCCESS)
+					ft_usleep(1);
 				return ;
 			}
 		}
-		usleep(100);
+		ft_usleep(1);
 	}
 	printf("All have eaten\n");
 }

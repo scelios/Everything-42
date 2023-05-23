@@ -6,7 +6,7 @@
 /*   By: beaudibe <beaudibe@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 13:12:40 by beaudibe          #+#    #+#             */
-/*   Updated: 2023/05/22 14:22:23 by beaudibe         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:59:04 by beaudibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	should_stop(t_main *main)
 {
+	int	dead;
+
 	pthread_mutex_lock(&main->dead_mutex);
-	if (main->dead == TRUE)
-	{
-		pthread_mutex_unlock(&main->dead_mutex);
-		return (TRUE);
-	}
+	dead = main->dead;
 	pthread_mutex_unlock(&main->dead_mutex);
+	if (dead == TRUE)
+		return (TRUE);
 	return (FALSE);
 }
 
@@ -54,8 +54,7 @@ int	is_useless(t_main *main, int id)
 	if (main->nb_philo == 1)
 	{
 		pthread_mutex_unlock(&main->param_mutex[id]);
-		ft_write(main, main->philo->id, THINKING);
-		ft_usleep(time_to_die + 1);
+		ft_usleep(time_to_die + 100);
 		return (TRUE);
 	}
 	pthread_mutex_unlock(&main->param_mutex[id]);

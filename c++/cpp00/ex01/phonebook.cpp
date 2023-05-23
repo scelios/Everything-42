@@ -95,6 +95,7 @@ void PhoneBook::addContact() {
 		std::getline(std::cin, line);
 	} while (line.empty());
 	new_contact.setFirstName(line);
+
 	do {
 		std::cout << "Enter last name: ";
 		std::getline(std::cin, line);
@@ -133,7 +134,7 @@ void PhoneBook::searchContact(){
 	}
 	std::cout << "     index|first name| last name|  nickname|" << std::endl;
 	for (int i = 0; i < this->contactCount_; i++) {
-		
+
 		std::cout << std::setw(10) << i << "|";
 		if (this->_contacts[i].returnFirstName().length() > 10)
 			std::cout << std::setw(9) << this->_contacts[i].returnFirstName().substr(0, 9) << "." << "|";

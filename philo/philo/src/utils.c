@@ -29,7 +29,13 @@ void	return_timer(t_time *time)
 
 void	ft_usleep(int n)
 {
-	usleep(n * 1000);
+	struct timeval	current;
+
+	gettimeofday(&current, NULL);
+	while (chrono(current) < n)
+	{
+		usleep(10);
+	}
 }
 
 t_time	init_time(void)
