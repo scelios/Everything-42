@@ -32,9 +32,6 @@ static void	destroy(t_main *main)
 
 static void	destruct(t_main *main, t_thread *thread)
 {
-	int	i;
-
-	i = 0;
 	free(main->philo);
 	if (thread != NULL)
 		free(thread);

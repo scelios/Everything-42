@@ -38,7 +38,6 @@ void	ft_think(t_main *main, int id)
 	pthread_mutex_unlock(&main->time_mutex[id]);
 	if (time < 0)
 		return ;
-	ft_write(main, id, THINKING);
 	ft_usleep(time);
 }
 

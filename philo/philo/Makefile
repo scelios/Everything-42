@@ -9,7 +9,8 @@
 
 NAME        := philo
 CC        := gcc
-FLAGS    := -Wall -Wextra -Werror -O1
+FLAGS    := -Wall -Wextra -Werror -O1 -fsanitize=address
+
 ################################################################################
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
