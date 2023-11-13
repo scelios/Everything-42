@@ -28,7 +28,7 @@ Fixed::Fixed(const float value){
 
 Fixed::Fixed(const Fixed& other) {
 	std::cout << "Copy constructor called" << std::endl;
-	this->_value = other.getRawBits();
+	*this = other;
 }
 
 Fixed::~Fixed() {
@@ -50,7 +50,6 @@ std::ostream	&operator<<(std::ostream &out, const Fixed &fixed)
 }
 
 int Fixed::getRawBits(void) const {
-	std::cout << "getRawBits member function called" << std::endl;
 	return this->_value;
 }
 
